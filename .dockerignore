@@ -1,0 +1,10 @@
+node_modules
+dist
+.git
+.gitignore
+*.md
+.DS_Store
+.env*
+docker/
+!docker/dev/Dockerfile.dev
+!docker/prod/Dockerfile

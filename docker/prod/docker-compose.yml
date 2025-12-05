@@ -1,0 +1,18 @@
+version: '3.9'
+services:
+  app:
+    build:
+      # use repository root as build context so Dockerfile and project files are available
+      context: ../..
+      # Dockerfile lives in the repo at docker/prod/Dockerfile; path is relative to the build context
+      dockerfile: docker/prod/Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    volumes:
+      - ../../bun.lock:/app/bun.lock
+      - ../../package.json:/app/package.json:ro
+    restart: unless-stopped
+    command: sh -c "bun run build:prod && bun run start:prod"

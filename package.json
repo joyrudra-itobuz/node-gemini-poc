@@ -1,0 +1,49 @@
+{
+  "name": "node-express-starter-template",
+  "module": "src/index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun --watch --hot src/index.ts",
+    "dev:inspect": "bun --watch --hot --inspect src/index.ts",
+    "start": "bun src/index.ts",
+    "build:prod": "bun /build.ts",
+    "start:prod": "bun dist/index.js",
+    "docker:dev:up": "docker compose -f ./docker/dev/docker-compose.dev.yml up --build",
+    "docker:dev:down": "docker compose -f ./docker/dev/docker-compose.dev.yml down",
+    "docker:up": "docker compose -f ./docker/prod/docker-compose.prod.yml up --build -d",
+    "docker:down": "docker compose -f ./docker/prod/docker-compose.prod.yml down",
+    "podman:dev:up": "podman compose -f ./docker/dev/docker-compose.dev.yml up --build",
+    "podman:dev:down": "podman compose -f ./docker/dev/docker-compose.dev.yml down",
+    "podman:up": "podman compose -f ./docker/prod/docker-compose.yml up --build -d",
+    "podman:down": "podman compose -f ./docker/prod/docker-compose.yml down",
+    "format": "bunx prettier --write .",
+    "check-format": "bunx prettier --check .",
+    "lint": "eslint . --ext .ts,.js",
+    "lint:fix": "eslint . --ext .ts,.js --fix",
+    "lint:strict": "eslint . --max-warnings=0 --ext .ts,.js"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/bun": "latest",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.10.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-security": "^3.0.1",
+    "globals": "^16.5.0",
+    "jiti": "^2.6.1",
+    "prettier": "^3.7.4",
+    "typescript-eslint": "^8.48.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "express": "^5.2.1"
+  }
+}

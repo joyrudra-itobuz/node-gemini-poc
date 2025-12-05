@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  app:
+    build:
+      # use repository root as build context so Dockerfile and project files are available
+      context: ../..
+      # Dockerfile lives in the repo at docker/prod/Dockerfile; path is relative to the build context
+      dockerfile: docker/dev/Dockerfile.dev
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    volumes:
+      # Mount only what Bun needs to watch so bind mount doesn't clobber node_modules
+      - ../../src:/app/src
+      - ../../package.json:/app/package.json:ro
+      - ../../tsconfig.json:/app/tsconfig.json:ro
+      - ../../build.ts:/app/build.ts:ro
+      - /app/node_modules
+    restart: unless-stopped
+    command: bun --watch --hot src/index.ts
