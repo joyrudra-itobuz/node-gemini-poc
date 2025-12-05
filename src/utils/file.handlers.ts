@@ -4,8 +4,8 @@ import type { Abortable } from 'node:events';
 import type { OpenMode } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import chalk from 'chalk';
 
+import { logger } from './logger';
 import config from '../config/config';
 
 async function readFile(
@@ -21,17 +21,26 @@ async function readFile(
   // eslint-disable-next-line security/detect-non-literal-fs-filename
   const buffer = await fs.readFile(filePath, options);
 
-  chalk.blue('Buffer Generated...', buffer, mime.lookup(filePath));
+  const mimeType = mime.lookup(filePath) || 'application/octet-stream';
+  const size = buffer.byteLength ?? buffer.length ?? 0;
 
+  logger.info('file:read', { filePath, sizeBytes: size, mimeType });
+
+  // Return `file` so callers that expect `{ file, mimeType }` work correctly
   return {
-    buffer,
-    mimeType: mime.lookup(filePath) || 'application/octet-stream',
+    file: buffer,
+    mimeType,
+    filePath,
+    size,
   };
 }
 
 function getBlob({ file, mimeType }: { file: Buffer; mimeType: string }) {
-  console.log({ file, mimeType });
-  return new Blob([file], { type: mimeType });
+  const blob = new Blob([file], { type: mimeType });
+  // log blob creation (size approximated from underlying buffer)
+  const size = (file as Buffer)?.byteLength ?? (file as Buffer)?.length ?? 0;
+  logger.info('blob:created', { sizeBytes: size, mimeType });
+  return blob;
 }
 
 export { readFile, getBlob };
